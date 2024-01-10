@@ -1,0 +1,4 @@
+name: BedrockParityPlugin
+version: 1.0.0
+main: me.techiekeith.BedrockParityPlugin
+api-version: '1.20'
