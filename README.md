@@ -13,6 +13,5 @@ This plugin was written for SpigotMC v1.20.4.
 
 ### Duplicate flower generation
 
-* The distribution of generated flowers does not match that in Bedrock.
-* The proportion of generated Poppy flowers produced when applying Bone Meal to Daffodil flowers does not match those in Bedrock.
-* The proportion of generated Daffodil flowers produced when applying Bone Meal to Poppy flowers does not match those in Bedrock.
+The flower generation process here is a "best estimate" based on some fairly crude statistical observations.
+The distribution of generated flowers, and the proportions of generated Poppy and Daffodil flowers produced when applying Bone Meal to the other type of flower, may not precisely match those in Bedrock.
