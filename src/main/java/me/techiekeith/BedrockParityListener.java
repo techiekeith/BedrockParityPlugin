@@ -19,6 +19,26 @@ public class BedrockParityListener implements Listener {
 
     private final Random random = new Random();
 
+    private final Material[] smallFlowers = {
+            Material.DANDELION,
+            Material.POPPY,
+            Material.BLUE_ORCHID,
+            Material.ALLIUM,
+            Material.AZURE_BLUET,
+            Material.RED_TULIP,
+            Material.ORANGE_TULIP,
+            Material.WHITE_TULIP,
+            Material.PINK_TULIP,
+            Material.OXEYE_DAISY,
+            Material.CORNFLOWER,
+            Material.LILY_OF_THE_VALLEY,
+    };
+
+    // TODO find out how many placement attempts Bedrock actually makes
+    private static final int maxFlowerPlacementAttempts = 24;
+
+    private static final int yOffsetChance = 10;
+
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
@@ -48,21 +68,6 @@ public class BedrockParityListener implements Listener {
         }
     }
 
-    private final Material[] smallFlowers = {
-            Material.DANDELION,
-            Material.POPPY,
-            Material.BLUE_ORCHID,
-            Material.ALLIUM,
-            Material.AZURE_BLUET,
-            Material.RED_TULIP,
-            Material.ORANGE_TULIP,
-            Material.WHITE_TULIP,
-            Material.PINK_TULIP,
-            Material.OXEYE_DAISY,
-            Material.CORNFLOWER,
-            Material.LILY_OF_THE_VALLEY,
-    };
-
     private boolean isSmallFlower(Block block) {
         Material blockType = block.getType();
         return Arrays.stream(smallFlowers).anyMatch(smallFlower -> smallFlower == blockType);
@@ -85,8 +90,7 @@ public class BedrockParityListener implements Listener {
     private boolean placeDuplicateFlowersInWorld(World world, Material flowerType, int x, int y, int z) {
         log("Bone Meal: Applied to " + flowerType.getTranslationKey() + " at " + x + ", " + y + ", " + z);
         boolean success = false;
-        // TODO find out how many tries Bedrock actually makes
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < maxFlowerPlacementAttempts; i++) {
             success |= tryPlaceDuplicateFlowerRandomly(world, flowerType, x, y, z);
         }
         return success;
@@ -94,26 +98,36 @@ public class BedrockParityListener implements Listener {
 
     private boolean tryPlaceDuplicateFlowerRandomly(World world, Material flowerType, int x, int y, int z) {
         // TODO find out what the real random flower distribution is
-        int dx = x + random.nextInt(-3, 4);
-        int dy = y + random.nextInt(-1, 3);
-        int dz = z + random.nextInt(-3, 4);
+        int nx = x;
+        int ny = y;
+        int nz = z;
+        for (int i = 0; i < 3; i++) {
+            nx += random.nextInt(3) - 1;
+            nz += random.nextInt(3) - 1;
+            if (i > 0) {
+                int moveY = random.nextInt(yOffsetChance);
+                if (moveY < 3) {
+                    ny += moveY  - 1;
+                }
+            }
+        }
         Material duplicateFlowerType = getDuplicateFlowerType(flowerType);
-        Block maybeGrassBlock = world.getBlockAt(dx, dy, dz);
-        Block maybeAirBlock = world.getBlockAt(dx, dy + 1, dz);
+        Block maybeGrassBlock = world.getBlockAt(nx, ny, nz);
+        Block maybeAirBlock = world.getBlockAt(nx, ny + 1, nz);
         boolean success = maybeGrassBlock.getType() == Material.GRASS_BLOCK && maybeAirBlock.getType() == Material.AIR;
         if (success) {
             maybeAirBlock.setType(duplicateFlowerType);
-            log("Bone Meal: Added " + duplicateFlowerType.getTranslationKey() + "  at " + dx + ", " + dy + ", " + dz);
+            log("Bone Meal: Added " + duplicateFlowerType.getTranslationKey() + "  at " + nx + ", " + (ny + 1) + ", " + nz);
         }
         return success;
     }
 
     private Material getDuplicateFlowerType(Material flowerType) {
-        if (flowerType == Material.DANDELION && random.nextInt(6) == 1) {
-            // 1/6 chance of Poppy instead (ratio is a guess and may not be altogether accurate)
+        if (flowerType == Material.DANDELION && random.nextInt(20) < 3) {
+            // 15% chance of Poppy instead (ratio is an estimate based on observations)
             return Material.POPPY;
-        } else if (flowerType == Material.POPPY && random.nextInt(6) == 1) {
-            // 1/6 chance of Dandelion instead (ratio is a guess and may not be altogether accurate)
+        } else if (flowerType == Material.POPPY && random.nextInt(20) < 3) {
+            // 15% chance of Dandelion instead (ratio is an estimate based on observations)
             return Material.DANDELION;
         }
         return flowerType;
