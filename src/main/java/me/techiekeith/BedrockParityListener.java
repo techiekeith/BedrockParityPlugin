@@ -2,8 +2,7 @@ package me.techiekeith;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Salmon;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -50,19 +49,24 @@ public class BedrockParityListener implements Listener {
     private static final int yOffsetDieRoll = 10;
 
     /**
-     * Checks for Salmon deaths and modifies drops where applicable.
+     * Checks for Cod, PufferFish, Salmon and TropicalFish deaths and modifies drops where applicable.
+     *
      * @param event the entity death event
      */
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity instanceof Salmon) {
-            substituteBoneForBoneMeal(event.getDrops());
+        if (entity instanceof Cod
+                || entity instanceof PufferFish
+                || entity instanceof Salmon
+                || entity instanceof TropicalFish) {
+            substituteBoneForBoneMeal(entity, event.getDrops());
         }
     }
 
     /**
      * Checks for Bone Meal usage and modifies behaviour where applicable.
+     *
      * @param event the player interaction event
      */
     @EventHandler
@@ -85,19 +89,21 @@ public class BedrockParityListener implements Listener {
 
     /**
      * Replaces all instances of Bone Meal with Bone in a list of item drops.
+     *
      * @param drops the list of item drops
      */
-    private void substituteBoneForBoneMeal(List<ItemStack> drops) {
+    private void substituteBoneForBoneMeal(LivingEntity entity, List<ItemStack> drops) {
         if (drops.removeIf(item -> item.getType() == Material.BONE_MEAL)) {
-            log("substituteBoneForBoneMeal", "Substituted Bone for Bone Meal");
+            log("substituteBoneForBoneMeal", entity.getName() + ": substituted Bone for Bone Meal");
             drops.add(new ItemStack(Material.BONE));
         }
     }
 
     /**
      * Replaces 1-2 Air blocks with Sugar Cane blocks above the one to which the player has applied Bone Meal.
-     * @param item the stack of Bone Meal
-     * @param block the block to which Bone Meal is being applied
+     *
+     * @param item     the stack of Bone Meal
+     * @param block    the block to which Bone Meal is being applied
      * @param gameMode the game mode
      */
     private void applyBoneMealToSugarCane(ItemStack item, Block block, GameMode gameMode) {
@@ -121,6 +127,7 @@ public class BedrockParityListener implements Listener {
 
     /**
      * Determines whether the targeted block type is a small flower.
+     *
      * @return true if the block type is a small flower
      * @see BedrockParityListener#smallFlowers
      */
@@ -130,8 +137,9 @@ public class BedrockParityListener implements Listener {
 
     /**
      * Adds flowers randomly on grass blocks surrounding the one to which the player has applied Bone Meal.
-     * @param item the stack of Bone Meal
-     * @param block the block to which Bone Meal is being applied
+     *
+     * @param item     the stack of Bone Meal
+     * @param block    the block to which Bone Meal is being applied
      * @param gameMode the game mode
      */
     private void applyBoneMealToSmallFlower(ItemStack item, Block block, GameMode gameMode) {
@@ -143,6 +151,7 @@ public class BedrockParityListener implements Listener {
 
     /**
      * Adds flowers randomly on grass blocks surrounding a specified block.
+     *
      * @param block the block around which to place flowers
      * @return true if one or more flowers were successfully placed
      */
@@ -158,6 +167,7 @@ public class BedrockParityListener implements Listener {
 
     /**
      * Tries to place a flower randomly on top of a grass block near a specified block.
+     *
      * @param block the block around which to place a flower
      * @return true if a flower was successfully placed
      */
@@ -179,6 +189,7 @@ public class BedrockParityListener implements Listener {
 
     /**
      * Randomly picks a candidate location for a new flower to place near a specified block.
+     *
      * @param block the block around which to place a flower
      * @return the candidate location
      */
@@ -197,6 +208,7 @@ public class BedrockParityListener implements Listener {
     /**
      * Determines the flower to place. For Dandelion and Poppy flowers, there is a 15% chance that the flower placed
      * will be different to that to which Bone Meal is being applied.
+     *
      * @param flowerType the type of flower to which Bone Meal is being applied
      */
     private Material getDuplicateFlowerType(Material flowerType) {
@@ -212,6 +224,7 @@ public class BedrockParityListener implements Listener {
 
     /**
      * Plays the Bone Meal effect (particles and sound) on the block to which Bone Meal is being applied.
+     *
      * @param block the block to which Bone Meal is being applied
      */
     private void playBoneMealEffect(Block block) {
@@ -223,7 +236,8 @@ public class BedrockParityListener implements Listener {
 
     /**
      * Consumes an item in a stack (unless the game mode is "Creative").
-     * @param item the item stack
+     *
+     * @param item     the item stack
      * @param gameMode the game mode
      */
     private void consumeItem(ItemStack item, GameMode gameMode) {
@@ -235,9 +249,10 @@ public class BedrockParityListener implements Listener {
     }
 
     /**
-     * Logs a message to the Bukket logger, with a prefix showing where the message came from.
+     * Logs a message to the Bukkit logger, with a prefix showing where the message came from.
+     *
      * @param methodName the name of the method that logged the message
-     * @param message the log message
+     * @param message    the log message
      */
     private void log(String methodName, String message) {
         Bukkit.getLogger().info("[" + getClass().getName() + "]: " + methodName + ":: " + message);
@@ -245,6 +260,7 @@ public class BedrockParityListener implements Listener {
 
     /**
      * Displays a location as a string in the form "X, Y, Z".
+     *
      * @param location the location
      * @return the string representation of the location
      */
