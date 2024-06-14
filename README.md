@@ -2,7 +2,7 @@
 
 A modest plugin to bring a few Minecraft Bedrock features to Minecraft Java.
 
-This plugin was written for SpigotMC v1.20.4.
+This plugin was written for SpigotMC v1.21.
 
 ## Features
 

@@ -1,1 +1,1 @@
-scp -p ../target/BedrockParityPlugin-1.0.2-SNAPSHOT.jar keith@blizzard:spigot/plugins/
+scp -p ../target/BedrockParityPlugin-1.0.3-SNAPSHOT.jar keith@blizzard:spigot/plugins/
