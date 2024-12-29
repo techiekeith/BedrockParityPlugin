@@ -1,4 +1,4 @@
 name: BedrockParityPlugin
-version: '1.0.3-SNAPSHOT'
+version: '1.0.4-SNAPSHOT'
 main: me.techiekeith.BedrockParityPlugin
 api-version: '1.21'
