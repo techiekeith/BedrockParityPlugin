@@ -34,6 +34,8 @@ public class BedrockParityListener implements Listener {
             Material.OXEYE_DAISY,
             Material.CORNFLOWER,
             Material.LILY_OF_THE_VALLEY,
+            Material.CLOSED_EYEBLOSSOM,
+            Material.OPEN_EYEBLOSSOM,
     };
 
     /**

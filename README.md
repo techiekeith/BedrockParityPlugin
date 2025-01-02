@@ -26,6 +26,8 @@ Run `mvn package` to build the plugin JAR in the `target` folder.
   * Oxeye Daisy
   * Cornflower
   * Lily Of The Valley
+  * Closed Eyeblossom
+  * Open Eyeblossom
   * Sugar Cane
 * Each flower duplicated from a Dandelion or Poppy has a 15% chance of being a Poppy or Dandelion, respectively.
 
