@@ -2,7 +2,7 @@
 
 A modest plugin to bring a few Minecraft Bedrock features to Minecraft Java.
 
-This plugin was initially written for SpigotMC version 1.20.4, and is available for versions up to 1.21.10.
+This plugin was initially written for SpigotMC version 1.20.4, and is available for versions up to 1.21.11.
 
 ## Installing
 
